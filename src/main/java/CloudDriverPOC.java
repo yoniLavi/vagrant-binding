@@ -13,6 +13,7 @@ import com.guigarage.vagrant.configuration.VagrantVmConfig;
 import com.guigarage.vagrant.configuration.builder.VagrantEnvironmentConfigBuilder;
 import com.guigarage.vagrant.configuration.builder.VagrantVmConfigBuilder;
 import com.guigarage.vagrant.model.VagrantEnvironment;
+import com.guigarage.vagrant.model.VagrantVm;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -20,21 +21,23 @@ import spark.Route;
 import java.io.File;
 import java.io.IOException;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.delete;
-import static spark.Spark.setPort;
+import static spark.Spark.*;
 
 public class CloudDriverPOC {
 
     public static void startSparc(final VagrantEnvironment environment) {
+        setIpAddress("127.0.0.1");
         setPort(9101);
 
         get(new Route("/instance") {
             @Override
             public Object handle(Request request, Response response) {
                 response.type("text/html");
-                return String.format("%d instance(s) are up!\n", environment.getVmCount());
+                String output = "These are your vms:\n";
+                for (VagrantVm vm : environment.getAllVms()) {
+                    output += String.format("* %s is %s\n", vm.getName(), vm.isRunning() ? "up" : "down");
+                }
+                return output;
             }
         });
 
