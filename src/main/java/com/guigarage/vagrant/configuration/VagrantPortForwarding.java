@@ -25,8 +25,14 @@ public class VagrantPortForwarding {
 		this.hostport = hostport;
 		this.name = name;
 	}
-	
-	/**
+
+    public VagrantPortForwarding(int guestport, int hostport) {
+        this.guestport = guestport;
+        this.hostport = hostport;
+    }
+
+
+    /**
 	 * The name of the port forwarding. This is optional and used by Vagrant internally
 	 * @return name of the port forwarding
 	 */
